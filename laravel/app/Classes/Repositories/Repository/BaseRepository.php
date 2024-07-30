@@ -31,11 +31,11 @@ abstract class BaseRepository implements IBaseRepository {
     /**
      * @inheritdoc
      */     
-    public function paginate(array $conditions = [], array $relation = [], int $limit) {
-        return $this->model->with($relation)->where($conditions)->paginate($limit);
+    public function paginate(array $options) {
+        return $this->model->with($options['relation'])->where($options['conditions'])->paginate($options['limit']);
     }
 
-    /**
+    /**$conditions = [], array $relation = [], int $limit
      * @inheritdoc
      */    
     public function findOne(array $conditions = [], array $relation = []){

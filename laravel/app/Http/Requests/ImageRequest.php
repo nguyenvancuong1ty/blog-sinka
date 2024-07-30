@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 
-class CategoryRequest extends FormRequest
+class ImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,9 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => ["required" , "string", "max:255"],
-            "description" => ["required","string", "max:255"]
+            "url" => ["required", "string", "max:255"],
+            "post_id" => ["required", "int"],
+            "alt_text" => ["required","string", "max:255"]
         ];
         
     }

@@ -26,7 +26,7 @@ class CategoryService extends BaseService implements ICategoryService
         try {      
             if (empty($data['id'])) {
                 return $this->categoryRepository->create($data);
-            } /* Update */
+            } 
             else {
                 $id = $data['id'];
                 $category = $this->categoryRepository->findById($id);
@@ -41,8 +41,14 @@ class CategoryService extends BaseService implements ICategoryService
     /** 
      * @inheritDoc 
     */
-     public function paginate($id){
-        return;
+     public function paginate($data){
+        $defaults = [
+            'relation' => ['posts'],
+            'conditions' => [],
+            'limit' => []
+        ];
+        $defaults = array_merge($defaults, $data);
+        return $this->categoryRepository->paginate($defaults);
      }
 
     /** @inheritDoc */

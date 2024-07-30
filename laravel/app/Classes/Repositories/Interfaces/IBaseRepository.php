@@ -20,7 +20,7 @@ interface IBaseRepository {
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function paginate(array $conditions, array $relation, int $limit); 
+    public function paginate(array $options); 
 
 
     /**

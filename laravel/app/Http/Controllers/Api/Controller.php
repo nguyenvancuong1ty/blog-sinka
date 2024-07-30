@@ -7,19 +7,23 @@ use Illuminate\Http\Response;
 
 abstract class Controller
 {
-    public function sendResponseSuccess(array|Collection $data = [], string $message = 'response', $code = 200) {
-        $res = [
-            'message'   => $message,
-            'data'      => $data,
+    public function sendResponseSuccess(array | Collection $options = []) {
+        $default = [
+            'message'   => "success",
+            'status' => 200,
+            'data' => [],
         ];
-        return response()->json($res, $code);
+        $res = array_merge($default, $options);
+        return response()->json($res);
     }
 
-    public function sendResponseError($message = "", $errors = '',  $code = Response::HTTP_INTERNAL_SERVER_ERROR) {
-        return response()->json( [
-            "error" => $errors,
-            "message" => $message,
-            "status" => $code
-        ]);
+    public function sendResponseError(array | Collection $options = []) {
+        $default = [
+            'message'   => "error",
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'error' => [],
+        ];
+        $res = array_merge($default, $options);
+        return response()->json($res);
     }
 }

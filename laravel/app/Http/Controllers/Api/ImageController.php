@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Classes\Services\Interfaces\ICategoryService;
-use App\Classes\Services\Interfaces\ITestService;
-use App\Http\Requests\CategoryRequest;
+use App\Classes\Services\Interfaces\IImageService;
+use App\Http\Requests\ImageRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class ImageController extends Controller
 {
     
-    protected ICategoryService $categoryService;
+    protected IImageService $imageService;
     
-    public function __construct(ICategoryService $_categoryService)
+    public function __construct(IImageService $_imageService)
     {
-        $this->categoryService = $_categoryService;
+        $this->imageService = $_imageService;
     }
     /**
      * Display a listing of the resource.
@@ -23,21 +22,21 @@ class CategoryController extends Controller
     public function index(Request $request): JsonResponse
     {
         $data = $request->all();
-        $result = $this->categoryService->find($data);
+        $result = $this->imageService->find($data);
         return $this->sendResponseSuccess(['data'=>$result]);
     }
 
-    public function createOrUpdate(CategoryRequest $request): JsonResponse
+    public function createOrUpdate(ImageRequest $request): JsonResponse
     {
         $data = $request->all();
-        $result = $this->categoryService->createOrUpdate($data);
+        $result = $this->imageService->createOrUpdate($data);
         return $this->sendResponseSuccess(['data'=>$result, 'status' => 201]);
     }
 
      public function paginate(Request $request): JsonResponse
     {
         $data = $request->all();
-        $result = $this->categoryService->paginate($data);
+        $result = $this->imageService->paginate($data);
         return $this->sendResponseSuccess(['data'=>$result]);
     }
 }

@@ -4,24 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Post extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
+    protected $table = 'posts';
 
     protected $guarded = [];
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string, string>
+     * @var array
      */
     protected $fillable = [
         'title',
+        'category_id',
         'description',
+        'thumbnail',
     ];
 
     /**
@@ -40,7 +43,11 @@ class Category extends Model
         return [];
     }
 
-    public function posts() : HasMany {
-        return $this -> hasMany(Post::class, 'category_id');
+    public function category() : BelongsTo {
+        return $this -> belongsTo(Category::class, 'category_id');
+    }
+
+    public function images() : HasMany {
+        return $this -> hasMany(Image::class, 'post_id');
     }
 }
