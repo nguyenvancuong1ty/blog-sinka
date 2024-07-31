@@ -42,9 +42,16 @@ class CategoryService extends BaseService implements ICategoryService
      * @inheritDoc 
     */
      public function paginate($data){
+        $conditions = [];
+        if (isset($data['category_id'])) {
+            $conditions['category_id'] = $data['category_id'];
+        }
+        if (isset($data['search'])) {
+        $conditions[] = ['title', 'LIKE', '%' . $data['search'] . '%'];
+        }
         $defaults = [
             'relation' => ['posts'],
-            'conditions' => [],
+            'conditions' => $conditions,
             'limit' => []
         ];
         $defaults = array_merge($defaults, $data);
@@ -60,7 +67,6 @@ class CategoryService extends BaseService implements ICategoryService
     /** @inheritDoc */
     public function delete($id): bool
     {
-        return 1;
         return $this->categoryRepository->deleteById($id);
     }
 }

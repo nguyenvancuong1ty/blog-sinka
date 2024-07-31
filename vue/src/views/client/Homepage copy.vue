@@ -1,61 +1,79 @@
 <script lang="ts" setup>
 import { useStore } from '../../store/home';
 import Loading from '../../components/Loading.vue';
+import axios from 'axios';
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import { MenuProps } from 'ant-design-vue';
-import { useCategory } from '../../composables/useCategory';
-import { usePost } from '../../composables/usePost';
+import { Category } from '@/services/category';
 
+
+interface Post {
+  id: number;
+  category_id: number;
+  title: string;
+  thumbnail: string;
+  description: string;
+  created_at: Date;
+}
 const store = useStore();
 const searchText = computed(() => store.currentTextSearch);
 
-const { categories, getListCategories } = useCategory();
-const { posts, total, getListPosts } = usePost();
-
+const categories = ref<Array<Category>>([]);
+const posts = ref<Array<Post>>([]);
 const activeTag = ref(1);
 const currentTag = ref<number[]>([1]);
 const items = ref<MenuProps['items']>([]);
 const loading = ref(false);
-const fetchCategory = async () => {
+const fetch = async () => {
   loading.value = true;
-  await getListCategories();
+  const res = await axios({
+    url: 'http://localhost:8000/api/category',
+    method: 'get',
+  });
   loading.value = false;
+  return res.data.data.data;
 };
 
 const fetchPost = async () => {
   loading.value = true;
-  await getListPosts({
-    category_id: currentTag.value,
-    search: searchText.value,
-    page: currentPage.value,
-    limit: limit.value,
+  const res = await axios({
+    url: `${import.meta.env.VITE_API_HOST}/api/post?category_id=${
+      currentTag.value
+    }&search=${searchText.value}&page=${current.value}&limit=${limit.value}`,
+    method: 'get',
   });
+  console.log(res.data.data.data);
   loading.value = false;
+  total.value = res.data.data.total;
+  return res.data.data.data;
 };
 
 onBeforeMount(async () => {
-  await fetchCategory();
-  if (Array.isArray(categories.value)) {
-    items.value = categories.value.map((item) => {
-      return {
-        key: item.id,
-        label: item.title,
-        title: item.title,
-      };
-    });
-  }
-  await fetchPost();
+  categories.value = await fetch();
+  items.value = categories.value.map((item) => {
+    return {
+      key: item.id,
+      label: item.title,
+      title: item.title,
+    };
+  });
+  posts.value = await fetchPost();
 });
 
-const currentPage = ref(1);
+const setActive = (id: number) => {
+  activeTag.value = id;
+};
+
+const current = ref(1);
+const total = ref(0);
 const limit = ref(4);
 
 watch(currentTag, async () => {
-  currentPage.value = 1;
+  current.value = 1;
 });
 
-watch([activeTag, searchText, currentPage, limit, currentTag], async () => {
-  await fetchPost();
+watch([activeTag, searchText, current, limit, currentTag], async () => {
+  posts.value = await fetchPost();
 });
 </script>
 
@@ -84,12 +102,7 @@ watch([activeTag, searchText, currentPage, limit, currentTag], async () => {
     </div>
   </div>
   <div class="flex justify-center my-8" v-if="!loading && posts.length > 0">
-    <a-pagination
-      v-model:current="currentPage"
-      :total="total"
-      :defaultPageSize="4"
-      :pageSizeOptions="[4, 8, 12, 14, 18, 20]"
-    />
+    <a-pagination v-model:current="current" :total="total" :pageSize="4" />
   </div>
   <div
     class="content flex justify-center items-center fixed top-0 bottom-0 left-0 right-0"

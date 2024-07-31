@@ -42,9 +42,15 @@ class PostService extends BaseService implements IPostService
      * @inheritDoc 
     */
      public function paginate($data){
-        $conditions = ["category_id" => $data['category_id'], "title" => $data['search']];
+        $conditions = [];
+        if (isset($data['category_id'])) {
+            $conditions['category_id'] = $data['category_id'];
+        }
+        if (isset($data['search'])) {
+        $conditions[] = ['title', 'LIKE', '%' . $data['search'] . '%'];
+        }
         $defaults = [
-            'relation' => ['images'],
+            'relation' => ['images', 'category'],
             'conditions' => $conditions,
             'limit' => []
         ];
@@ -63,7 +69,6 @@ class PostService extends BaseService implements IPostService
     /** @inheritDoc */
     public function delete($id): bool
     {
-        return 1;
         return $this->postRepository->deleteById($id);
     }
 }

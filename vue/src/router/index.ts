@@ -8,6 +8,9 @@ import UIElements from '../views/UIElements.vue';
 import Modal from '../views/Modal.vue';
 import Blank from '../views/Blank.vue';
 import Login from '../views/Login.vue';
+
+import Category from '../views/admin/Category/index.vue';
+import Post from '../views/admin/Post/index .vue';
 import Homepage from '../views/client/Homepage.vue';
 import DefaultLayout from '../components/DefaultLayout.vue';
 const routes = [
@@ -18,8 +21,29 @@ const routes = [
     children: [
       {
         path: 'dashboard',
-        name: 'Dashboard',
+        name: 'dashboard',
         component: Dashboard,
+      },
+      {
+        path: 'categories',
+        name: 'categories',
+        children: [
+          {
+            path: '',
+            name: 'categories.index',
+            component: Category,
+          },
+          {
+            path: 'create',
+            name: 'categories.create',
+            component: () => import('@/views/admin/Category/create.vue'),
+          },
+        ],
+      },
+      {
+        path: 'posts',
+        name: 'Post',
+        component: Post,
       },
       {
         path: 'forms',
