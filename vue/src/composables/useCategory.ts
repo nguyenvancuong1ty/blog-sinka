@@ -15,17 +15,27 @@ export function useCategory() {
       limit: limit || 10,
     };
     try {
-      const res = await categoryApi.getCategories(params);
-      categories.value = res.data.data;
-      total.value = res.data.total;
+      const response = await categoryApi.getCategories(params);
+      categories.value = response.data.data;
+      total.value = response.data.total;
     } catch (error) {
       return;
     }
   }
 
   async function createCategory(category: Category) {
-    const res = await categoryApi.createCategory(category);
-    return res;
+    const response = await categoryApi.createCategory(category);
+    return response;
+  }
+
+  async function updateCategory(id: number, category: Category) {
+    const response = await categoryApi.updateCategory(id, category);
+    return response;
+  }
+
+  async function getCategoryById(id: number) {
+    const response = await categoryApi.getCategoryById(id);
+    return response.data;
   }
 
   async function deleteCategory(id: number) {
@@ -40,7 +50,9 @@ export function useCategory() {
     categories,
     total,
     createCategory,
+    updateCategory,
     getListCategories,
     deleteCategory,
+    getCategoryById,
   };
 }

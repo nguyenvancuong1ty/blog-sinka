@@ -20,7 +20,7 @@ abstract class Controller
     public function sendResponseError(array | Collection $options = []) {
         $default = [
             'message'   => "error",
-            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'status' =>  $options['status'] || Response::HTTP_INTERNAL_SERVER_ERROR,
             'error' => [],
         ];
         $res = array_merge($default, $options);

@@ -1,18 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DashboardLayout from '../components/DashboardLayout.vue';
-import Dashboard from '../views/Dashboard.vue';
-import Forms from '../views/Forms.vue';
-import Card from '../views/Card.vue';
-import Tables from '../views/Tables.vue';
-import UIElements from '../views/UIElements.vue';
-import Modal from '../views/Modal.vue';
-import Blank from '../views/Blank.vue';
 import Login from '../views/Login.vue';
 
 import Category from '../views/admin/Category/index.vue';
 import Post from '../views/admin/Post/index .vue';
 import Homepage from '../views/client/Homepage.vue';
 import DefaultLayout from '../components/DefaultLayout.vue';
+import Blank from '@/views/admin/Example/Blank.vue';
 const routes = [
   {
     path: '/admin',
@@ -22,7 +16,7 @@ const routes = [
       {
         path: 'dashboard',
         name: 'dashboard',
-        component: Dashboard,
+        component: Blank,
       },
       {
         path: 'categories',
@@ -38,37 +32,58 @@ const routes = [
             name: 'categories.create',
             component: () => import('@/views/admin/Category/create.vue'),
           },
+          {
+            path: ':id',
+            name: 'categories.update',
+            component: () => import('@/views/admin/Category/update.vue'),
+          },
         ],
       },
       {
-        path: 'posts',
-        name: 'Post',
-        component: Post,
+        path: 'post',
+        name: 'post',
+        children: [
+          {
+            path: '',
+            name: 'post.index',
+            component: Post,
+          },
+          {
+            path: 'create',
+            name: 'post.create',
+            component: () => import('@/views/admin/Post/create.vue'),
+          },
+          {
+            path: ':id',
+            name: 'post.update',
+            component: () => import('@/views/admin/Post/update.vue'),
+          },
+        ],
       },
       {
         path: 'forms',
         name: 'Forms',
-        component: Forms,
+        component: Blank,
       },
       {
         path: 'cards',
         name: 'Cards',
-        component: Card,
+        component: Blank,
       },
       {
         path: 'tables',
         name: 'Tables',
-        component: Tables,
+        component: Blank,
       },
       {
         path: 'ui-elements',
         name: 'UIElements',
-        component: UIElements,
+        component: Blank,
       },
       {
         path: 'modal',
         name: 'Modal',
-        component: Modal,
+        component: Blank,
       },
       {
         path: 'blank',

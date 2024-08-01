@@ -5,8 +5,10 @@ import { ref } from 'vue';
 const store = useStore();
 const searchText = ref(store.currentTextSearch);
 
-function updateSearchText() {
-  store.change(searchText.value);
+function updateSearchText(event: KeyboardEvent) {
+  if (event.key === 'Enter') {
+    store.change(searchText.value);
+  }
 }
 </script>
 
@@ -14,7 +16,7 @@ function updateSearchText() {
   <div class="wrap w-screen h-screen flex justify-center items-center">
     <div class="web w-full h-full overflow-y-auto">
       <header
-        class="flex justify-between min-h-20 px-6 items-center sticky top-0 bg-[#ccc]"
+        class="flex justify-between min-h-20 px-6 items-center sticky top-0 bg-[#F5F5F5]"
       >
         <div class="flex items-center">
           <font-awesome-icon icon="bars" />
@@ -23,10 +25,10 @@ function updateSearchText() {
         <div class="relative flex items-center">
           <input
             type="text"
-            class="search-input w-96 bg-[#ccc] border-[#fff] px-0"
+            class="search-input w-96 bg-[#F5F5F5] border-[#fff] px-0"
             placeholder="Search topic"
             v-model="searchText"
-            @input="updateSearchText"
+            @keyup="updateSearchText"
           />
           <font-awesome-icon
             icon="magnifying-glass"

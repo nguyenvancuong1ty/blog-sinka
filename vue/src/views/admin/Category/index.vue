@@ -1,8 +1,13 @@
 <template>
   <div class="flex justify-end my-8">
-    <a-button type="primary" :size="size"
-      ><router-link to="categories/create">Create category</router-link>
-    </a-button>
+    <router-link to="categories/create">
+      <a-button
+        type="primary"
+        :size="size"
+        :class="'bg-green-500 hover:!bg-green-600'"
+        >Create category
+      </a-button></router-link
+    >
   </div>
   <a-table :columns="columns" :data-source="categories" :pagination="false">
     <template #headerCell="{ column }">
@@ -19,7 +24,11 @@
       </template>
       <template v-else-if="column.key === 'action'">
         <div class="flex">
-          <a-button type="primary">Update</a-button>
+          <router-link
+            :to="{ name: 'categories.update', params: { id: record.id } }"
+          >
+            <a-button type="primary">Update</a-button></router-link
+          >
           <a-divider type="vertical" />
           <a-button type="primary" danger @click="confirm(record.id)"
             >Delete</a-button
@@ -101,6 +110,7 @@ const confirm = (id: number) => {
     cancelText: 'Cancel',
     onOk: async () => {
       await deleteCategory(idDelete.value).then(async () => {
+        currentPage.value = 1;
         await fetchCategory();
       });
     },

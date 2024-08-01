@@ -47,9 +47,7 @@ const inactiveClass = ref(
             />
           </svg>
 
-          <span class="mx-2 text-2xl font-semibold text-white"
-            >Blog-Sinka</span
-          >
+          <span class="mx-2 text-2xl font-semibold text-white">Blog-Sinka</span>
         </div>
       </div>
 
@@ -112,8 +110,8 @@ const inactiveClass = ref(
         </router-link>
         <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[$route.name === 'Post' ? activeClass : inactiveClass]"
-          to="/admin/posts"
+          :class="[$route.name === 'post.index' ? activeClass : inactiveClass]"
+          to="/admin/post"
         >
           <svg
             class="w-5 h-5"

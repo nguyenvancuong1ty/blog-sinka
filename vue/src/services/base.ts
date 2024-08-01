@@ -36,6 +36,7 @@ export class BaseService {
       .post<T>(url, data)
       .then((response: AxiosResponse<T>) => response.data)
       .catch((error) => {
+        console.log(error);
         return error.response.data;
       });
   }

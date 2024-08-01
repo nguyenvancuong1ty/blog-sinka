@@ -23,6 +23,21 @@ export function usePost() {
       return;
     }
   }
+  async function createPost(post: Post): Promise<any> {
+    const response = await postApi.createPost(post);
+    return response;
+  }
+
+  async function updatePost(id: number, post: Post) {
+    const response = await postApi.updatePost(id, post);
+    return response;
+  }
+
+  async function getPostById(id: number) {
+    const response = await postApi.getPostById(id);
+    return response.data;
+  }
+
   async function deletePost(id: number) {
     try {
       await postApi.deletePost(id);
@@ -35,5 +50,8 @@ export function usePost() {
     total,
     getListPosts,
     deletePost,
+    createPost,
+    updatePost,
+    getPostById,
   };
 }

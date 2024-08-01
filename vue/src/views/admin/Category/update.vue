@@ -25,7 +25,7 @@
           errors.description
         }}</span>
         <div class="text-right">
-          <a-button type="primary" html-type="submit">Create</a-button>
+          <a-button type="primary" html-type="submit">Update</a-button>
         </div>
       </a-space>
     </form>
@@ -33,16 +33,17 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch } from 'vue';
+import { onBeforeMount, reactive, watch } from 'vue';
 import { useCategory } from '@/composables/useCategory';
 import { Category } from '@/services/category';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { NotificationMessage } from '@/util/NotificationMessage';
 
-const { createCategory } = useCategory();
+const { updateCategory, getCategoryById } = useCategory();
 
-const route = useRouter();
-
+const router = useRouter();
+const route = useRoute();
+const id = Number(route.params.id);
 //form data
 const formState = reactive<Category>({
   title: '',
@@ -56,16 +57,22 @@ const errors: Record<string, string> = reactive({
 });
 
 const onSubmit = async () => {
-  const res = await createCategory(formState);
+  const res = await updateCategory(id, formState);
   if (res.errors) {
     errors.title = res.errors.title;
     errors.description = res.errors.description;
     return;
   }
-  NotificationMessage('success');
-  route.push({ name: 'categories.index' });
+  NotificationMessage('success', 'Notification', 'Update category success');
+  router.push({ name: 'categories.index' });
 };
 watch(formState, () => {});
+
+onBeforeMount(async () => {
+  const response = await getCategoryById(id);
+  formState.title = response.title;
+  formState.description = response.description;
+});
 
 const resetError = (field: string) => {
   errors[field] = '';

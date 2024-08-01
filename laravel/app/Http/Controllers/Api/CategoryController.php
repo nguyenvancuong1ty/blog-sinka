@@ -28,6 +28,14 @@ class CategoryController extends Controller
         return $this->sendResponseSuccess(['data'=>$result]);
     }
 
+
+    public function edit(Request $request): JsonResponse
+    {
+        $id = $request->id;
+        $result = $this->categoryService->findById($id);
+        return $this->sendResponseSuccess(['data'=>$result]);
+    }
+
     public function createOrUpdate(CategoryRequest $request): JsonResponse
     {
         $data = $request->all();

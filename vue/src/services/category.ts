@@ -16,7 +16,7 @@ export class CategoryService extends BaseService {
     return this.get<Category[]>('/category', params);
   }
 
-  public async getCategory(id: number): Promise<Category> {
+  public async getCategoryById(id: number): Promise<Category> {
     return this.get<Category>(`/category/${id}`);
   }
 
@@ -28,7 +28,10 @@ export class CategoryService extends BaseService {
     id: number,
     category: Partial<Category>
   ): Promise<Category> {
-    return this.put<Category>(`/category/${id}`, category);
+    return this.post<Category>(`/category/create-or-update`, {
+      id,
+      ...category,
+    });
   }
 
   public async deleteCategory(id: number): Promise<void> {

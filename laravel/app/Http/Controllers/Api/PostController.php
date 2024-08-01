@@ -26,6 +26,13 @@ class PostController extends Controller
         return $this->sendResponseSuccess(['data'=>$result]);
     }
 
+    public function edit(Request $request): JsonResponse
+    {
+        $id = $request->id;
+        $result = $this->postService->findById($id);
+        return $this->sendResponseSuccess(['data'=>$result]);
+    }
+
     public function createOrUpdate(PostRequest $request): JsonResponse
     {
         $data = $request->all();
@@ -38,5 +45,13 @@ class PostController extends Controller
         $data = $request->all();
         $result = $this->postService->paginate($data);
         return $this->sendResponseSuccess(['data'=>$result]);
+    }
+
+    public function delete(Request $request) : JsonResponse {
+        $result = $this->postService->delete($request->id);
+        if($result) {
+            return $this->sendResponseSuccess(['message'   => "delete post success",]);
+        }
+        return $this->sendResponseError(['message'   => "delete post false",]);
     }
 }

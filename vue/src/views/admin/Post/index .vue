@@ -1,4 +1,14 @@
 <template>
+  <div class="flex justify-end my-8">
+    <router-link to="post/create">
+      <a-button
+        type="primary"
+        :size="size"
+        :class="'bg-green-500 hover:!bg-green-600'"
+        >Create Post
+      </a-button></router-link
+    >
+  </div>
   <a-table :columns="columns" :data-source="posts" :pagination="false">
     <template #headerCell="{ column }">
       <template v-if="column.key === 'id'">
@@ -24,7 +34,9 @@
       </template>
       <template v-else-if="column.key === 'action'">
         <div class="flex">
-          <a-button type="primary">Update</a-button>
+          <router-link :to="{ name: 'post.update', params: { id: record.id } }">
+            <a-button type="primary">Update</a-button>
+          </router-link>
           <a-divider type="vertical" />
           <a-button type="primary" danger @click="confirm(record.id)"
             >Delete</a-button
@@ -50,7 +62,9 @@ import { usePost } from '@/composables/usePost';
 import { Modal } from 'ant-design-vue';
 import { createVNode, onBeforeMount, ref, watch, h } from 'vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { sizeType } from 'ant-design-vue/es/drawer';
 
+const size = ref<sizeType>('large');
 const columns = [
   {
     name: 'Name',
