@@ -1,11 +1,14 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Cookies from 'js-cookie';
+
+type ContentType = 'application/json' | '';
 
 export class BaseService {
   private http: AxiosInstance;
   private authToken?: string;
 
-  constructor(baseURL: string, authToken?: string) {
-    this.authToken = authToken;
+  constructor(baseURL: string, autToken?: string) {
+    this.authToken = autToken;
     this.http = axios.create({
       baseURL,
       headers: {
@@ -14,12 +17,6 @@ export class BaseService {
       },
     });
   }
-
-  public setAuthToken(token: string) {
-    this.authToken = token;
-    this.http.defaults.headers['Authorization'] = `Bearer ${token}`;
-  }
-
   // GET METHOD
   public get<T>(url: string, params?: Record<string, any>): Promise<T> {
     return this.http
@@ -36,7 +33,6 @@ export class BaseService {
       .post<T>(url, data)
       .then((response: AxiosResponse<T>) => response.data)
       .catch((error) => {
-        console.log(error);
         return error.response.data;
       });
   }

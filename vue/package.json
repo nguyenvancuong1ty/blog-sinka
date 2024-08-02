@@ -17,12 +17,14 @@
     "@tailwindcss/typography": "^0.5.9",
     "ant-design-vue": "^4.2.3",
     "axios": "^1.7.2",
+    "js-cookie": "^3.0.5",
     "pinia": "^2.2.0",
     "vue": "^3.3.4",
     "vue-router": "4.2.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.39.5",
+    "@types/js-cookie": "^3.0.6",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/compiler-sfc": "^3.3.4",
     "autoprefixer": "^10.4.14",

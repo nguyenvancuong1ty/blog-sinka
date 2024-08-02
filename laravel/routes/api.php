@@ -4,6 +4,7 @@ use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Middleware\JwtMiddleware;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,11 +20,10 @@ Route::group([
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me'])->middleware(JwtMiddleware::class);
 });
 
-Route::group([
-    'prefix' => 'category'
-], function () {
+Route::middleware([JwtMiddleware::class])->prefix('category')->group(function () {
     Route::get('/', [CategoryController::class, 'paginate']);
     Route::get('/{id}', [CategoryController::class, 'edit']);
     Route::post('/create-or-update', [CategoryController::class, 'createOrUpdate']);

@@ -6,51 +6,75 @@ use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\AuthRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     
 
-    public function login(AuthRequest $request ) : JsonResponse {
-        $credentials = $request->only('email', 'password');
-        $token = JWTAuth::attempt($credentials);
-        Log::info("TOKEN.$token.");
-        if (!$token ) {
-            return $this->sendResponseError(['error' => 'Credentials incorrect', 'status' => 401]);
+    public function login(Request $request ) : JsonResponse {
+        $validator = Validator::make($request->only('email','password'), [
+            'email' => 'email|required',
+            'password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            Log::info( trans('auth.failed'));
+            return $this->sendResponseError(['message' => trans('auth.failed'),'errors' => $validator->errors()->messages()]);
         }
-        return $this->sendResponseSuccess(
-            ['data' => 
-                ['access_token' => $token, 
-                 'token_type'=> 'bearer',
-                 'expires_in'=> JWTAuth::factory()->getTTL() * 60]
-            ]);
+        
+        $credentials = request(['email', 'password']);
+        $token = JWTAuth::attempt($credentials);
+        if (!$token ) {
+            return $this->sendResponseError(['errors' => 'Credentials incorrect', 'message' => 'invalid credential', 'status' => 401]);
+        }
+
+        return $this->sendResponseSuccess($this->TokenInfo($token));
     }
 
     public function register(AuthRequest $request) : JsonResponse
     {
-        $validatedData = $request->validated();
-
         $user = User::create([
-            'name' => $validatedData['email'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
+            'name' => $request ->email,
+            'email' => $request ->email,
+            'password' => bcrypt($request ->password),
         ]);
 
-        $token = JWTAuth::attempt($validatedData);
+        $token = JWTAuth::attempt($request->all());
 
         if (!$token) {
-            return $this->sendResponseError(['error' => 'Registration failed', 'status' => 500]);
+            return $this->sendResponseError(['errors' => 'Registration failed', 'status' => 500]);
         }
 
-        return $this->sendResponseSuccess(['data' => [$token]]);
+        return $this->sendResponseSuccess($this->TokenInfo($token));
     }
+
+    public function me() : JsonResponse
+    {
+        $data = auth()->user();
+        return $this->sendResponseSuccess(['data' => $data]);
+    }
+    
 
 
     public function logout()
     {
         auth()->logout();
          return $this->sendResponseSuccess();
+    }
+
+    public static function TokenInfo($token) 
+    {
+        return 
+            ['data' => 
+                [
+                    'access_token' => $token, 
+                    'token_type'=> 'bearer',
+                    'expires_in'=> JWTAuth::factory()->getTTL() * 60
+                ]
+            ];
     }
 }

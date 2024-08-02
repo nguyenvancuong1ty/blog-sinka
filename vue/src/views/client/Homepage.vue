@@ -107,7 +107,7 @@ const responsiveSettings = [
 
 <template>
   <div
-    class="category flex justify-center items-center sticky top-20 border-b overflow-x-auto bg-[#fff] py-4"
+    class="category flex justify-center items-center sticky top-20 border-b overflow-x-auto bg-[#fff] py-4 z-20"
   >
     <a-carousel
       arrows

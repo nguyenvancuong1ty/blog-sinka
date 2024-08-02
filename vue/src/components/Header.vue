@@ -1,9 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useSidebar } from '../composables/useSidebar'
+import { ref } from 'vue';
+import { useSidebar } from '../composables/useSidebar';
+import Cookies from 'js-cookie';
+import { useRouter } from 'vue-router';
 
-const dropdownOpen = ref(false)
-const { isOpen } = useSidebar()
+const route = useRouter();
+const dropdownOpen = ref(false);
+const { isOpen } = useSidebar();
+const handleLogout = async () => {
+  Cookies.set('access_token', '');
+  route.push({ name: 'login' }).then(() => {
+    window.location.reload();
+  });
+};
 </script>
 
 <template>
@@ -48,7 +57,7 @@ const { isOpen } = useSidebar()
           class="w-32 pl-10 pr-4 text-indigo-600 border-gray-200 rounded-md sm:w-64 focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
           type="text"
           placeholder="Search"
-        >
+        />
       </div>
     </div>
 
@@ -79,7 +88,7 @@ const { isOpen } = useSidebar()
             class="object-cover w-full h-full"
             src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=296&q=80"
             alt="Your avatar"
-          >
+          />
         </button>
 
         <div
@@ -103,17 +112,19 @@ const { isOpen } = useSidebar()
             <a
               href="#"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
-            >Profile</a>
+              >Profile</a
+            >
             <a
               href="#"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
-            >Products</a>
-            <router-link
-              to="/"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
+              >Products</a
+            >
+            <button
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white w-full text-left"
+              @click="handleLogout"
             >
               Log out
-            </router-link>
+            </button>
           </div>
         </transition>
       </div>

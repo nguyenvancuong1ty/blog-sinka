@@ -1,13 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useAuth } from '@/composables/useAuth';
+import { User } from '@/services/auth';
+import { NotificationMessage } from '@/util/NotificationMessage';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const email = ref('johndoe@mail.com');
-const password = ref('@#!@#asdf1231!_!@#');
 
-function login() {
-  router.push('admin/dashboard');
+const formData: User = reactive({
+  email: 'admin@gmail.com',
+  password: 'admin123',
+});
+
+const { login } = useAuth();
+
+async function onSubmit() {
+  const res = await login(formData);
+  console.log('login nè');
+  if (res.errors) {
+    return NotificationMessage('error', 'Notification', res.message);
+  }
+  NotificationMessage('success', 'Notification', 'Login success');
+  router.push({ name: 'categories.index' }).then(() => {
+    window.location.reload();
+  });
 }
 </script>
 
@@ -34,14 +50,14 @@ function login() {
             fill="white"
           />
         </svg>
-        <span class="text-2xl font-semibold text-gray-700">V-Dashboard</span>
+        <span class="text-2xl font-semibold text-gray-700">Blog-Sinka</span>
       </div>
 
-      <form class="mt-4" @submit.prevent="login">
+      <form class="mt-4" @submit.prevent="onSubmit">
         <label class="block">
           <span class="text-sm text-gray-700">Email</span>
           <input
-            v-model="email"
+            v-model="formData.email"
             type="email"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
           />
@@ -50,7 +66,7 @@ function login() {
         <label class="block mt-3">
           <span class="text-sm text-gray-700">Password</span>
           <input
-            v-model="password"
+            v-model="formData.password"
             type="password"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
           />

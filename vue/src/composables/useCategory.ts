@@ -1,7 +1,9 @@
+import Cookies from 'js-cookie';
 import { Category, CategoryService } from '../services/category';
 import { ref } from 'vue';
 
-const categoryApi = new CategoryService();
+const access_token = Cookies.get('access_token');
+const categoryApi = new CategoryService(access_token);
 
 export function useCategory() {
   const categories = ref<Array<Category>>([]);

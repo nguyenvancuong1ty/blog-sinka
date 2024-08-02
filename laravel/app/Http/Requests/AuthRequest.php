@@ -25,7 +25,7 @@ class AuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email" => ["required", "string", "max:255"],
+            "email" => ["required", "string",'unique:users', "max:255"],
             "password" => ["required", "string", "max:255"],
         ];
         
@@ -35,7 +35,7 @@ class AuthRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([   
             'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'message'   => '',
+            'message'   => 'Invalid email or password',
             'errors'    => $validator->errors(),
         ], Response::HTTP_UNPROCESSABLE_ENTITY)
         );

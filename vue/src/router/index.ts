@@ -7,6 +7,7 @@ import Post from '../views/admin/Post/index .vue';
 import Homepage from '../views/client/Homepage.vue';
 import DefaultLayout from '../components/DefaultLayout.vue';
 import Blank from '@/views/admin/Example/Blank.vue';
+import { isAuthorized } from '@/store/auth';
 const routes = [
   {
     path: '/admin',
@@ -94,7 +95,7 @@ const routes = [
   },
   {
     path: '/',
-    name: '',
+    name: 'home',
     component: DefaultLayout,
     children: [
       {
@@ -106,7 +107,7 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login,
   },
 ];
@@ -114,6 +115,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+router.beforeEach(async (to, from, next) => {
+  const isAuth = await isAuthorized();
+  console.log(isAuth);
+
+  if (!isAuth && to.name !== 'login') {
+    // Redirect to login page
+    next({ name: 'login' });
+  } else if (isAuth && (to.name == 'login' || to.name == 'register')) {
+    // Redirect to home page and reload the page
+    window.location.href = '/'; // Thay đổi URL theo route của bạn
+  } else {
+    next(); // Proceed to the route
+  }
 });
 
 export default router;

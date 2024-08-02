@@ -7,23 +7,25 @@ use Illuminate\Http\Response;
 
 abstract class Controller
 {
-    public function sendResponseSuccess(array | Collection $options = []) {
+    public function sendResponseSuccess(array $options = []) {
+        $status = $options['status'] ?? Response::HTTP_OK;
         $default = [
             'message'   => "success",
-            'status' => 200,
+            'status' => $status,
             'data' => [],
         ];
         $res = array_merge($default, $options);
-        return response()->json($res);
+        return response()->json($res, $status);
     }
 
-    public function sendResponseError(array | Collection $options = []) {
+    public function sendResponseError(array $options = []) {
+        $status = $options['status'] ?? Response::HTTP_INTERNAL_SERVER_ERROR;
         $default = [
             'message'   => "error",
-            'status' =>  $options['status'] || Response::HTTP_INTERNAL_SERVER_ERROR,
-            'error' => [],
+            'status' =>  $status,
+            'errors' => [],
         ];
         $res = array_merge($default, $options);
-        return response()->json($res);
+        return response()->json($res, $status);
     }
 }
